@@ -1,0 +1,4 @@
+project_id = "yffwwwrgzgnddhhrusve"
+
+[functions.graphql]
+verify_jwt = false
