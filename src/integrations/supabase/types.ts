@@ -14,7 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      shipments: {
+        Row: {
+          actual_delivery: string | null
+          carrier: string
+          cost: number | null
+          created_at: string | null
+          created_by: string | null
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          destination: string
+          dimensions: string | null
+          estimated_delivery: string | null
+          id: string
+          notes: string | null
+          origin: string
+          priority: Database["public"]["Enums"]["shipment_priority"] | null
+          status: Database["public"]["Enums"]["shipment_status"] | null
+          tracking_number: string
+          type: Database["public"]["Enums"]["shipment_type"] | null
+          updated_at: string | null
+          weight: number | null
+        }
+        Insert: {
+          actual_delivery?: string | null
+          carrier: string
+          cost?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          destination: string
+          dimensions?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          notes?: string | null
+          origin: string
+          priority?: Database["public"]["Enums"]["shipment_priority"] | null
+          status?: Database["public"]["Enums"]["shipment_status"] | null
+          tracking_number: string
+          type?: Database["public"]["Enums"]["shipment_type"] | null
+          updated_at?: string | null
+          weight?: number | null
+        }
+        Update: {
+          actual_delivery?: string | null
+          carrier?: string
+          cost?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          destination?: string
+          dimensions?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          notes?: string | null
+          origin?: string
+          priority?: Database["public"]["Enums"]["shipment_priority"] | null
+          status?: Database["public"]["Enums"]["shipment_status"] | null
+          tracking_number?: string
+          type?: Database["public"]["Enums"]["shipment_type"] | null
+          updated_at?: string | null
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
