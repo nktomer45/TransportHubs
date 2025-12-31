@@ -21,19 +21,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<AppRole>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserRole = async (userId: string) => {
-    const { data, error } = await supabase
-      .from('user_roles' as any)
-      .select('role')
-      .eq('user_id', userId)
-      .maybeSingle();
-    
-    if (error || !data) {
-      console.error('Error fetching user role:', error);
+  const fetchUserRole = async (userId: string): Promise<AppRole> => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase as any)
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .maybeSingle();
+      
+      if (error || !data) {
+        return null;
+      }
+      
+      return data.role as AppRole;
+    } catch (err) {
+      console.error('Error fetching user role:', err);
       return null;
     }
-    
-    return (data as any).role as AppRole;
   };
 
   useEffect(() => {
