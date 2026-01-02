@@ -6,6 +6,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { ShipmentGrid } from '@/components/shipments/ShipmentGrid';
 import { ShipmentTileView } from '@/components/shipments/ShipmentTileView';
 import { ShipmentDetailModal } from '@/components/shipments/ShipmentDetailModal';
+import { ShipmentForm } from '@/components/shipments/ShipmentForm';
 import { carriers, statuses, priorities, shipmentTypes } from '@/data/mockShipments';
 import { Shipment, ShipmentFilters } from '@/types/shipment';
 import { Button } from '@/components/ui/button';
@@ -36,11 +37,12 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function Index() {
   const navigate = useNavigate();
-  const { session, loading: authLoading } = useAuth();
+  const { session, loading: authLoading, role } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'tile'>('tile');
   const [selectedShipment, setSelectedShipment] = useState<Shipment | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [createFormOpen, setCreateFormOpen] = useState(false);
   const [filters, setFilters] = useState<ShipmentFilters>({});
   const { toast } = useToast();
 
@@ -111,10 +113,15 @@ export default function Index() {
                   Track and manage all your shipments in one place
                 </p>
               </div>
-              <Button className="gradient-primary text-primary-foreground shadow-glow">
-                <Plus className="h-4 w-4 mr-2" />
-                New Shipment
-              </Button>
+              {role === 'admin' && (
+                <Button 
+                  className="gradient-primary text-primary-foreground shadow-glow"
+                  onClick={() => setCreateFormOpen(true)}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Shipment
+                </Button>
+              )}
             </div>
 
             {/* Stats Cards */}
@@ -320,6 +327,13 @@ export default function Index() {
           setDetailModalOpen(false);
           setSelectedShipment(null);
         }}
+      />
+
+      {/* Create Shipment Form */}
+      <ShipmentForm
+        isOpen={createFormOpen}
+        onClose={() => setCreateFormOpen(false)}
+        onSuccess={refetch}
       />
     </div>
   );
