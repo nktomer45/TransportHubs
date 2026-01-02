@@ -45,6 +45,7 @@ export type Database = {
         Row: {
           actual_delivery: string | null
           carrier: string
+          consignee: string | null
           cost: number | null
           created_at: string | null
           created_by: string | null
@@ -58,6 +59,7 @@ export type Database = {
           notes: string | null
           origin: string
           priority: Database["public"]["Enums"]["shipment_priority"] | null
+          shipper: string | null
           status: Database["public"]["Enums"]["shipment_status"] | null
           tracking_number: string
           type: Database["public"]["Enums"]["shipment_type"] | null
@@ -67,6 +69,7 @@ export type Database = {
         Insert: {
           actual_delivery?: string | null
           carrier: string
+          consignee?: string | null
           cost?: number | null
           created_at?: string | null
           created_by?: string | null
@@ -80,6 +83,7 @@ export type Database = {
           notes?: string | null
           origin: string
           priority?: Database["public"]["Enums"]["shipment_priority"] | null
+          shipper?: string | null
           status?: Database["public"]["Enums"]["shipment_status"] | null
           tracking_number: string
           type?: Database["public"]["Enums"]["shipment_type"] | null
@@ -89,6 +93,7 @@ export type Database = {
         Update: {
           actual_delivery?: string | null
           carrier?: string
+          consignee?: string | null
           cost?: number | null
           created_at?: string | null
           created_by?: string | null
@@ -102,6 +107,7 @@ export type Database = {
           notes?: string | null
           origin?: string
           priority?: Database["public"]["Enums"]["shipment_priority"] | null
+          shipper?: string | null
           status?: Database["public"]["Enums"]["shipment_status"] | null
           tracking_number?: string
           type?: Database["public"]["Enums"]["shipment_type"] | null

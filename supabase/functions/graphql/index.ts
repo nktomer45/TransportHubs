@@ -110,13 +110,15 @@ const typeDefs = `
     origin: String!
     destination: String!
     carrier: String!
-    weight: Float!
-    estimatedDelivery: String!
-    shipper: String!
-    consignee: String!
+    weight: Float
+    dimensions: String
+    estimatedDelivery: String
+    customerName: String!
+    customerEmail: String
+    customerPhone: String
     priority: ShipmentPriority
     type: ShipmentType
-    cost: Float!
+    cost: Float
     notes: String
   }
 
@@ -126,10 +128,12 @@ const typeDefs = `
     status: ShipmentStatus
     carrier: String
     weight: Float
+    dimensions: String
     estimatedDelivery: String
     actualDelivery: String
-    shipper: String
-    consignee: String
+    customerName: String
+    customerEmail: String
+    customerPhone: String
     priority: ShipmentPriority
     type: ShipmentType
     cost: Float
@@ -291,11 +295,15 @@ async function createShipment(supabase: any, input: any, userId: string) {
       destination: input.destination,
       carrier: input.carrier,
       weight: input.weight,
+      dimensions: input.dimensions,
       estimated_delivery: input.estimatedDelivery,
-      shipper: input.shipper,
-      consignee: input.consignee,
+      customer_name: input.customerName,
+      customer_email: input.customerEmail,
+      customer_phone: input.customerPhone,
+      shipper: input.customerName,
+      consignee: input.customerName,
       priority: input.priority || 'medium',
-      type: input.type || 'ground',
+      type: input.type || 'standard',
       cost: input.cost,
       notes: input.notes,
       created_by: userId,
