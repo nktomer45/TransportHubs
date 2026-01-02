@@ -1,4 +1,6 @@
-export type ShipmentStatus = 'pending' | 'in_transit' | 'delivered' | 'delayed' | 'cancelled';
+export type ShipmentStatus = 'pending' | 'picked_up' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'delayed' | 'cancelled';
+export type ShipmentPriority = 'low' | 'medium' | 'high' | 'critical';
+export type ShipmentType = 'standard' | 'express' | 'overnight' | 'freight' | 'ltl';
 
 export interface Shipment {
   id: string;
@@ -7,15 +9,20 @@ export interface Shipment {
   destination: string;
   status: ShipmentStatus;
   carrier: string;
-  weight: number;
-  estimatedDelivery: string;
+  weight?: number;
+  dimensions?: string;
+  estimatedDelivery?: string;
   actualDelivery?: string;
-  shipper: string;
-  consignee: string;
+  shipper?: string;
+  consignee?: string;
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
   createdAt: string;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  type: 'ground' | 'air' | 'ocean' | 'rail';
-  cost: number;
+  updatedAt?: string;
+  priority: ShipmentPriority;
+  type: ShipmentType;
+  cost?: number;
   notes?: string;
 }
 

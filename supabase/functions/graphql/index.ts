@@ -10,7 +10,9 @@ const corsHeaders = {
 const typeDefs = `
   enum ShipmentStatus {
     pending
+    picked_up
     in_transit
+    out_for_delivery
     delivered
     delayed
     cancelled
@@ -20,14 +22,15 @@ const typeDefs = `
     low
     medium
     high
-    urgent
+    critical
   }
 
   enum ShipmentType {
-    ground
-    air
-    ocean
-    rail
+    standard
+    express
+    overnight
+    freight
+    ltl
   }
 
   enum AppRole {
@@ -42,18 +45,23 @@ const typeDefs = `
     destination: String!
     status: ShipmentStatus!
     carrier: String!
-    weight: Float!
-    estimatedDelivery: String!
+    weight: Float
+    dimensions: String
+    estimatedDelivery: String
     actualDelivery: String
-    shipper: String!
-    consignee: String!
+    shipper: String
+    consignee: String
+    customerName: String
+    customerEmail: String
+    customerPhone: String
     priority: ShipmentPriority!
     type: ShipmentType!
-    cost: Float!
+    cost: Float
     notes: String
     createdBy: ID
     createdAt: String!
     updatedAt: String!
+  }
   }
 
   type Profile {
@@ -362,10 +370,14 @@ function transformShipment(data: any) {
     status: data.status,
     carrier: data.carrier,
     weight: data.weight,
+    dimensions: data.dimensions,
     estimatedDelivery: data.estimated_delivery,
     actualDelivery: data.actual_delivery,
-    shipper: data.shipper,
-    consignee: data.consignee,
+    shipper: data.shipper || data.customer_name,
+    consignee: data.consignee || data.customer_name,
+    customerName: data.customer_name,
+    customerEmail: data.customer_email,
+    customerPhone: data.customer_phone,
     priority: data.priority,
     type: data.type,
     cost: data.cost,

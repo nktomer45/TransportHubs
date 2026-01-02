@@ -1,12 +1,11 @@
 import { cn } from '@/lib/utils';
-
-type Priority = 'low' | 'medium' | 'high' | 'urgent';
+import { ShipmentPriority } from '@/types/shipment';
 
 interface PriorityBadgeProps {
-  priority: Priority;
+  priority: ShipmentPriority;
 }
 
-const priorityConfig: Record<Priority, { label: string; className: string }> = {
+const priorityConfig: Record<ShipmentPriority, { label: string; className: string }> = {
   low: {
     label: 'Low',
     className: 'bg-muted text-muted-foreground',
@@ -19,8 +18,8 @@ const priorityConfig: Record<Priority, { label: string; className: string }> = {
     label: 'High',
     className: 'bg-warning/15 text-warning',
   },
-  urgent: {
-    label: 'Urgent',
+  critical: {
+    label: 'Critical',
     className: 'bg-destructive/15 text-destructive',
   },
 };

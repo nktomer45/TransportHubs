@@ -11,9 +11,17 @@ const statusConfig: Record<ShipmentStatus, { label: string; className: string }>
     label: 'Pending',
     className: 'bg-warning/15 text-warning border-warning/30',
   },
+  picked_up: {
+    label: 'Picked Up',
+    className: 'bg-info/15 text-info border-info/30',
+  },
   in_transit: {
     label: 'In Transit',
     className: 'bg-info/15 text-info border-info/30',
+  },
+  out_for_delivery: {
+    label: 'Out for Delivery',
+    className: 'bg-primary/15 text-primary border-primary/30',
   },
   delivered: {
     label: 'Delivered',

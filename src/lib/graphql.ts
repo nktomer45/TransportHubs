@@ -43,10 +43,13 @@ export const SHIPMENTS_QUERY = `
         status
         carrier
         weight
+        dimensions
         estimatedDelivery
         actualDelivery
         shipper
         consignee
+        customerName
+        customerEmail
         priority
         type
         cost
