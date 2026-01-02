@@ -1,11 +1,12 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { ShipmentGrid } from '@/components/shipments/ShipmentGrid';
 import { ShipmentTileView } from '@/components/shipments/ShipmentTileView';
 import { ShipmentDetailModal } from '@/components/shipments/ShipmentDetailModal';
-import { mockShipments, carriers, statuses, priorities, shipmentTypes } from '@/data/mockShipments';
+import { carriers, statuses, priorities, shipmentTypes } from '@/data/mockShipments';
 import { Shipment, ShipmentFilters } from '@/types/shipment';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,10 +28,15 @@ import {
   CheckCircle2,
   AlertTriangle,
   XCircle,
+  Loader2,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useShipments } from '@/hooks/useShipments';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Index() {
+  const navigate = useNavigate();
+  const { session, loading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'tile'>('tile');
   const [selectedShipment, setSelectedShipment] = useState<Shipment | null>(null);
@@ -38,35 +44,24 @@ export default function Index() {
   const [filters, setFilters] = useState<ShipmentFilters>({});
   const { toast } = useToast();
 
-  // Filter shipments
-  const filteredShipments = useMemo(() => {
-    return mockShipments.filter((shipment) => {
-      if (filters.status && shipment.status !== filters.status) return false;
-      if (filters.carrier && shipment.carrier !== filters.carrier) return false;
-      if (filters.priority && shipment.priority !== filters.priority) return false;
-      if (filters.type && shipment.type !== filters.type) return false;
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase();
-        return (
-          shipment.trackingNumber.toLowerCase().includes(searchLower) ||
-          shipment.origin.toLowerCase().includes(searchLower) ||
-          shipment.destination.toLowerCase().includes(searchLower) ||
-          shipment.shipper.toLowerCase().includes(searchLower) ||
-          shipment.consignee.toLowerCase().includes(searchLower)
-        );
-      }
-      return true;
-    });
-  }, [filters]);
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    if (!authLoading && !session) {
+      navigate('/auth');
+    }
+  }, [session, authLoading, navigate]);
 
-  // Stats
+  // Fetch shipments from API
+  const { shipments, loading: shipmentsLoading, error, pageInfo, refetch } = useShipments(filters);
+
+  // Stats computed from API data
   const stats = useMemo(() => ({
-    total: mockShipments.length,
-    inTransit: mockShipments.filter(s => s.status === 'in_transit').length,
-    delivered: mockShipments.filter(s => s.status === 'delivered').length,
-    delayed: mockShipments.filter(s => s.status === 'delayed').length,
-    pending: mockShipments.filter(s => s.status === 'pending').length,
-  }), []);
+    total: shipments.length,
+    inTransit: shipments.filter(s => s.status === 'in_transit').length,
+    delivered: shipments.filter(s => s.status === 'delivered').length,
+    delayed: shipments.filter(s => s.status === 'delayed').length,
+    pending: shipments.filter(s => s.status === 'pending').length,
+  }), [shipments]);
 
   const handleSelectShipment = (shipment: Shipment) => {
     setSelectedShipment(shipment);
@@ -272,8 +267,19 @@ export default function Index() {
           {/* Results Info */}
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm text-muted-foreground">
-              Showing <span className="font-medium text-foreground">{filteredShipments.length}</span> of{' '}
-              <span className="font-medium text-foreground">{mockShipments.length}</span> shipments
+              {shipmentsLoading ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading shipments...
+                </span>
+              ) : error ? (
+                <span className="text-destructive">{error}</span>
+              ) : (
+                <>
+                  Showing <span className="font-medium text-foreground">{shipments.length}</span>
+                  {pageInfo && <> of <span className="font-medium text-foreground">{pageInfo.totalCount}</span></>} shipments
+                </>
+              )}
             </p>
           </div>
 
@@ -284,14 +290,18 @@ export default function Index() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
           >
-            {viewMode === 'grid' ? (
+            {shipmentsLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : viewMode === 'grid' ? (
               <ShipmentGrid
-                shipments={filteredShipments}
+                shipments={shipments}
                 onSelect={handleSelectShipment}
               />
             ) : (
               <ShipmentTileView
-                shipments={filteredShipments}
+                shipments={shipments}
                 onSelect={handleSelectShipment}
                 onEdit={handleEdit}
                 onFlag={handleFlag}
