@@ -58,7 +58,7 @@ export function ShipmentDetailModal({ shipment, isOpen, onClose }: ShipmentDetai
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 z-50 md:w-full md:max-w-2xl md:max-h-[90vh] overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
+            className="fixed inset-4 md:inset-auto md:left-1/4 md:top-0 md:-translate-x-1/2 md:-translate-y-1/2 z-50 md:w-full md:max-w-2xl md:max-h-[90vh] overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
           >
             {/* Header */}
             <div className="relative gradient-primary p-6 pb-12">

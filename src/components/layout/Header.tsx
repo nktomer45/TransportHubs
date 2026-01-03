@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -22,6 +23,12 @@ const navItems = [
 ];
 
 export function Header({ onMenuToggle }: HeaderProps) {
+const { signOut, user } = useAuth();
+const userData = user?.user_metadata ?? {};
+
+const handleLogout = async () => {
+  await signOut();
+};
   return (
     <header className="sticky top-0 z-40 glass border-b border-border">
       <div className="flex h-16 items-center gap-4 px-4 lg:px-6">
@@ -65,22 +72,22 @@ export function Header({ onMenuToggle }: HeaderProps) {
         <div className="flex-1" />
 
         {/* Search */}
-        <div className="hidden md:flex relative w-64">
+        {/* <div className="hidden md:flex relative w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search shipments..."
             className="pl-9 bg-muted/50 border-border focus:bg-muted"
           />
-        </div>
+        </div> */}
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
+        {/* <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
           <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
             3
           </Badge>
           <span className="sr-only">Notifications</span>
-        </Button>
+        </Button> */}
 
         {/* User Menu */}
         <DropdownMenu>
@@ -93,20 +100,18 @@ export function Header({ onMenuToggle }: HeaderProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <div className="px-2 py-1.5">
-              <p className="text-sm font-medium">John Doe</p>
-              <p className="text-xs text-muted-foreground">john@company.com</p>
+              <p className="text-sm font-medium">{userData.full_name}</p>
+              <p className="text-xs text-muted-foreground">{userData.email}</p>
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem
+              className="text-destructive"
+              onSelect={(e) => {
+                e.preventDefault(); // ✅ prevents auto-close issues
+                handleLogout();
+              }}
+            >
               <LogOut className="mr-2 h-4 w-4" />
               Log out
             </DropdownMenuItem>
