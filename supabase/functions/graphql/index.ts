@@ -328,8 +328,16 @@ async function updateShipment(supabase: any, id: string, input: any) {
   if (input.status !== undefined) updateData.status = input.status;
   if (input.carrier !== undefined) updateData.carrier = input.carrier;
   if (input.weight !== undefined) updateData.weight = input.weight;
+  if (input.dimensions !== undefined) updateData.dimensions = input.dimensions;
   if (input.estimatedDelivery !== undefined) updateData.estimated_delivery = input.estimatedDelivery;
   if (input.actualDelivery !== undefined) updateData.actual_delivery = input.actualDelivery;
+  if (input.customerName !== undefined) {
+    updateData.customer_name = input.customerName;
+    updateData.shipper = input.customerName;
+    updateData.consignee = input.customerName;
+  }
+  if (input.customerEmail !== undefined) updateData.customer_email = input.customerEmail;
+  if (input.customerPhone !== undefined) updateData.customer_phone = input.customerPhone;
   if (input.shipper !== undefined) updateData.shipper = input.shipper;
   if (input.consignee !== undefined) updateData.consignee = input.consignee;
   if (input.priority !== undefined) updateData.priority = input.priority;

@@ -7,6 +7,8 @@ import { ShipmentGrid } from '@/components/shipments/ShipmentGrid';
 import { ShipmentTileView } from '@/components/shipments/ShipmentTileView';
 import { ShipmentDetailModal } from '@/components/shipments/ShipmentDetailModal';
 import { ShipmentForm } from '@/components/shipments/ShipmentForm';
+import { EditShipmentForm } from '@/components/shipments/EditShipmentForm';
+import { DeleteShipmentDialog } from '@/components/shipments/DeleteShipmentDialog';
 import { carriers, statuses, priorities, shipmentTypes } from '@/data/mockShipments';
 import { Shipment, ShipmentFilters } from '@/types/shipment';
 import { Button } from '@/components/ui/button';
@@ -43,6 +45,10 @@ export default function Index() {
   const [selectedShipment, setSelectedShipment] = useState<Shipment | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [createFormOpen, setCreateFormOpen] = useState(false);
+  const [editFormOpen, setEditFormOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [shipmentToEdit, setShipmentToEdit] = useState<Shipment | null>(null);
+  const [shipmentToDelete, setShipmentToDelete] = useState<Shipment | null>(null);
   const [filters, setFilters] = useState<ShipmentFilters>({});
   const { toast } = useToast();
 
@@ -71,10 +77,8 @@ export default function Index() {
   };
 
   const handleEdit = (shipment: Shipment) => {
-    toast({
-      title: "Edit Shipment",
-      description: `Opening editor for ${shipment.trackingNumber}`,
-    });
+    setShipmentToEdit(shipment);
+    setEditFormOpen(true);
   };
 
   const handleFlag = (shipment: Shipment) => {
@@ -85,11 +89,8 @@ export default function Index() {
   };
 
   const handleDelete = (shipment: Shipment) => {
-    toast({
-      title: "Shipment Deleted",
-      description: `${shipment.trackingNumber} has been removed`,
-      variant: "destructive",
-    });
+    setShipmentToDelete(shipment);
+    setDeleteDialogOpen(true);
   };
 
   return (
@@ -333,6 +334,28 @@ export default function Index() {
       <ShipmentForm
         isOpen={createFormOpen}
         onClose={() => setCreateFormOpen(false)}
+        onSuccess={refetch}
+      />
+
+      {/* Edit Shipment Form */}
+      <EditShipmentForm
+        shipment={shipmentToEdit}
+        isOpen={editFormOpen}
+        onClose={() => {
+          setEditFormOpen(false);
+          setShipmentToEdit(null);
+        }}
+        onSuccess={refetch}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteShipmentDialog
+        shipment={shipmentToDelete}
+        isOpen={deleteDialogOpen}
+        onClose={() => {
+          setDeleteDialogOpen(false);
+          setShipmentToDelete(null);
+        }}
         onSuccess={refetch}
       />
     </div>
